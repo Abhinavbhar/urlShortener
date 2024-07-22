@@ -5,24 +5,37 @@ import MobileMenu from './mobile-menu';
 import { useMyContext } from '../context/MyContext.js';
 
 export default function Header() {
-  console.log("header")
+  console.log("header");
   const { data } = useMyContext();
 
-
   return (
-    <header className={`fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out `}>
+    <header className="fixed w-full z-30 md:bg-opacity-90 transition duration-300 ease-in-out">
       <div className="max-w-6xl mx-auto px-5 sm:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="shrink-0 mr-4">
             <Logo />
           </div>
-
+          <h2 className='font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out'>
+            url.com
+          </h2>
           <nav className="hidden md:flex md:grow">
             <ul className="flex grow justify-end flex-wrap items-center">
               {data ? (
-                <li className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">
-                  Welcome, {data.username}
-                </li>
+                <>
+                  <li className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">
+                    Welcome, {data.username}
+                  </li>
+                  <li>
+                    <Link href="/createurl" className="btn-sm text-white bg-blue-600 hover:bg-blue-700 ml-3">
+                      Create URL
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/dashboard" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">
+                      Dashboard
+                    </Link>
+                  </li>
+                </>
               ) : (
                 <>
                   <li>
@@ -40,7 +53,6 @@ export default function Header() {
               )}
             </ul>
           </nav>
-
           <MobileMenu />
         </div>
       </div>

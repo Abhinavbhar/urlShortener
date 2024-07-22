@@ -5,7 +5,6 @@ import (
 	"Abhinavbhar/dub.sh/middleware"
 	"Abhinavbhar/dub.sh/redis"
 	"Abhinavbhar/dub.sh/routes"
-
 	"log"
 	"net/http"
 
@@ -21,7 +20,7 @@ func main() {
 		AllowedHeaders:   []string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: true,
-		MaxAge:           300, // Maximum value not ignored by any of major browsers
+		MaxAge:           300,
 	})
 
 	// Initialize MongoDB and Redis
@@ -30,11 +29,10 @@ func main() {
 
 	// Create a new router
 	r := mux.NewRouter()
-
-	// Define routes
-	r.Handle("/", middleware.AuthMiddleware(http.HandlerFunc(routes.Url))).Methods("POST")
+	r.Handle("/api/createurl", middleware.AuthMiddleware(http.HandlerFunc(routes.Url))).Methods("POST")
 	r.Handle("/authcheck", middleware.AuthMiddleware(http.HandlerFunc(routes.AuthChecker))).Methods("GET")
-	r.HandleFunc("/url/{value}", routes.BaseUrl).Methods("GET")
+	r.Handle("/dashboard", middleware.AuthMiddleware(http.HandlerFunc(routes.Dashboard))).Methods("GET")
+	r.HandleFunc("/{value}", routes.RedirectUrl).Methods("GET")
 	r.HandleFunc("/login", routes.Login).Methods("POST")
 	r.HandleFunc("/signup", routes.Signup).Methods("POST")
 	handler := corsHandler.Handler(r)

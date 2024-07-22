@@ -33,7 +33,7 @@ export default function Features() {
           {/* Section header */}
           <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
             <h1 className="h2 mb-4">Explore the solutions</h1>
-            <p className="text-xl text-gray-600">No login required click on Start Free Trial and make your short link that works for 8 hours</p>
+            <p className="text-xl text-gray-600">Do a simple login and make your short links</p>
           </div>
 
           {/* Section content */}
@@ -83,7 +83,7 @@ export default function Features() {
                 >
                   <div>
                     <div className="font-bold leading-snug tracking-tight mb-1">100% bug free and 100% price free</div>
-                    <div className="text-gray-600">We like to save your money and brain cells so have fun with 100% bug and literally free service</div>
+                    <div className="text-gray-600">We like to save your money and brain cells so have fun with 100% free and 100% bug free services</div>
                   </div>
                   <div className="flex justify-center items-center w-8 h-8 bg-white rounded-full shadow flex-shrink-0 ml-3">
                     <svg className="w-3 h-3 fill-current" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">

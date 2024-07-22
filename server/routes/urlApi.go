@@ -6,12 +6,14 @@ import (
 	"Abhinavbhar/dub.sh/redis"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"math/rand"
 	"net/http"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -22,6 +24,7 @@ type Data struct {
 func Url(w http.ResponseWriter, r *http.Request) {
 	Mongoclient := mongoclient.GetClient()
 	urlCollection := Mongoclient.Database("dub").Collection("url")
+	userCollection := Mongoclient.Database("dub").Collection("users")
 
 	var id string
 	if User, ok := r.Context().Value(middleware.UserKey).(middleware.User); ok {
@@ -41,11 +44,11 @@ func Url(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	uri := generateRandomString(3)
-	finalUrl := "http://localhost:8080/url/" + uri
+	finalUrl := "http://localhost:8080/" + uri
 
 	client := redis.RedisDatabase()
 	ctx := r.Context()
-	if err := client.Set(ctx, uri, data.Url, 20*time.Hour).Err(); err != nil {
+	if err := client.Set(ctx, uri, data.Url, 1*time.Hour).Err(); err != nil {
 		http.Error(w, "Failed to store URL in Redis", http.StatusInternalServerError)
 		return
 	}
@@ -66,9 +69,38 @@ func Url(w http.ResponseWriter, r *http.Request) {
 	url.URL = data.Url
 	url.ShortCode = uri
 	url.UserId = userID
+	update := bson.M{
+		"$push": bson.M{"active_links": url},
+	}
+	var user mongoclient.User
+	filter := bson.M{
+		"_id": userID}
+	error12 := userCollection.FindOne(context.TODO(), filter).Decode(&user)
+	if error12 != nil {
+		fmt.Println(error12)
+		http.Error(w, "url  already  exists go in the dashboard to see", http.StatusBadRequest)
+		return
+	}
+	for _, link := range user.ActiveLinks {
+		if link.URL == data.Url {
+			http.Error(w, "url already exists", http.StatusBadRequest)
+			return
+		}
+	}
+	fmt.Println(user)
+	if len(user.ActiveLinks) >= 10 {
+		http.Error(w, "url limit exceed only 10 url are accepted", http.StatusBadRequest)
+		return
+	}
 	_, error := urlCollection.InsertOne(context.TODO(), url)
+	_, error1 := userCollection.UpdateByID(context.TODO(), userID, update)
+
 	if error != nil {
 		http.Error(w, "failed to store your url", http.StatusBadRequest)
+		return
+	}
+	if error1 != nil {
+		fmt.Println(error1)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
