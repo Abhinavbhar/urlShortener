@@ -35,6 +35,11 @@ export default function Header() {
                       Dashboard
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/customurl" className="btn-sm text-gray-200 bg-blue-600 hover:bg-blue-800 ml-3">
+                      Custom URL
+                    </Link>
+                  </li>
                 </>
               ) : (
                 <>

@@ -6,6 +6,7 @@ type ActiveLink struct {
 	URL       string             `json:"url" bson:"url"`
 	ShortCode string             `json:"short_code" bson:"short_code"`
 	UserId    primitive.ObjectID `json:"userId" bson:"userId"`
+	Ip        []string           `json:"ip,omitempty" bson:"ip,omitempty"`
 }
 
 type User struct {

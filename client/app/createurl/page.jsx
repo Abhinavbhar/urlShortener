@@ -6,10 +6,12 @@ const Page = () => {
   const [url, setUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [magicLink, setMagicLink] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(''); // Clear previous error
 
     try {
       const response = await axios.post(
@@ -17,9 +19,11 @@ const Page = () => {
         { url },
         { withCredentials: true }
       );
-            setMagicLink(response.data.finalUrl);
-    } catch (error) {
-      console.error('Error generating magic link:', error);
+      console.log(response.data)
+      setMagicLink(response.data.finalUrl);
+    } catch (err) {
+      setError(err.response.data || 'An error occurred');
+      console.log(err.response.data)
     }
 
     setIsLoading(false);
@@ -32,7 +36,6 @@ const Page = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-       
         <h1 className="text-2xl font-bold mb-4">Generate Magic Link</h1>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -90,6 +93,12 @@ const Page = () => {
                 Copy
               </button>
             </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-6 p-4 bg-red-100 border border-red-200 rounded-lg">
+            <p className="text-red-700">{error}</p>
           </div>
         )}
       </div>
