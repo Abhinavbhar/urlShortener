@@ -15,7 +15,7 @@ const Page = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/api/createurl',
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/createurl`,
         { url },
         { withCredentials: true }
       );

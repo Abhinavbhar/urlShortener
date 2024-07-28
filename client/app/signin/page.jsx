@@ -14,6 +14,7 @@ function Page() {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`,
          { username, password },
         {withCredentials:true});
+        console.log(response)
         router.push('/dashboard')
     } catch (error) {
       console.error('Login failed:', error);

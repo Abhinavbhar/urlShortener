@@ -17,7 +17,7 @@ const Page = () => {
 
     try {
       const response = await axios.post(
-        'http://localhost:8080/customurl',
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/customurl`,
         { url, "custom_url": shortCode },
         { withCredentials: true }
       );
@@ -26,7 +26,7 @@ const Page = () => {
       setMagicLink(response.data.finalUrl);
 
       // Construct the full custom URL
-      const customUrl = `http://localhost:8080/${shortCode}`;
+      const customUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/${shortCode}`;
       setFullCustomUrl(customUrl);
     } catch (err) {
       setError(err.response?.data || 'An error occurred');
